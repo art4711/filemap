@@ -16,7 +16,7 @@ func NewReader(file *os.File) (*Map, error) {
 	if err != nil {
 		return nil, err
 	}
-	return mmap(uintptr(s.Size()), PROT_READ, MAP_SHARED, int(file.Fd()), 0)
+	return mmap(uintptr(s.Size()), prot_read, map_shared, int(file.Fd()), 0)
 }
 
 func (m *Map)Close() {

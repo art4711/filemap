@@ -8,8 +8,8 @@ package filemap
 import "C"
 import "unsafe"
 
-const PROT_READ = C.PROT_READ
-const MAP_SHARED = C.MAP_SHARED
+const prot_read = C.PROT_READ
+const map_shared = C.MAP_SHARED
 
 func mmap(len uintptr, prot, flags, fd int, offset uint64) (*Map, error) {
 	var v Map
