@@ -1,7 +1,7 @@
-package mmap_test
+package filemap_test
 
 import(
-	"mmap"
+	"filemap"
 	"testing"
 	"os"	
 )
@@ -19,12 +19,13 @@ func TestTrivial(t *testing.T) {
 
 	f.Write(data)
 
-	m, err := mmap.Mapall(f)
+	m, err := filemap.New(f)
 	if err != nil {
 		t.Fatalf("Mapall: %v\n", err)
 	}
+	defer m.Close()
 
-	x, _ := m.GetArray(1, 0, 100, false)
+	x, _ := m.Slice(1, 0, 100)
 	d := *(*[]byte)(x)
 
 	for i, v := range(d) {

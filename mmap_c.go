@@ -1,4 +1,4 @@
-package mmap
+package filemap
 
 /*
 #include <sys/types.h>
@@ -7,11 +7,6 @@ package mmap
 */
 import "C"
 import "unsafe"
-
-type Map struct {
-	data uintptr
-	size uintptr
-}
 
 func mmap(len uintptr, prot, flags, fd int, offset uint64) (*Map, error) {
 	var v Map
@@ -23,4 +18,8 @@ func mmap(len uintptr, prot, flags, fd int, offset uint64) (*Map, error) {
 	v.data = uintptr(x)
 	v.size = len
 	return &v, nil
+}
+
+func (m *Map) munmap() {
+	C.munmap(unsafe.Pointer(m.data), C.size_t(m.size))
 }
