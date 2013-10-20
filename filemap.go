@@ -50,6 +50,7 @@ func (m Map) Slice(elem_len uintptr, off, sz uint64) (unsafe.Pointer, error) {
 	return unsafe.Pointer(&sl), nil
 }
 
+// Bytes returns a []byte at a given offset with a given size
 func (m Map) Bytes(off, sz uint64) ([]byte, error) {
 	if sz > uint64(maxint) {
 		return nil, errors.New("size overflow")
@@ -63,7 +64,7 @@ func (m Map) Bytes(off, sz uint64) ([]byte, error) {
 
 const string_limit = 64*1024*1024
 
-// CString finds a 
+// CString finds a C string at an offset and returns a []byte covering that string.
 func (m Map) CString(off uint64) ([]byte, error) {
 	l := uint64(m.size) - off
 	if l > string_limit {
