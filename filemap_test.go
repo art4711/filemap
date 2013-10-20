@@ -19,9 +19,9 @@ func TestTrivial(t *testing.T) {
 
 	f.Write(data)
 
-	m, err := filemap.New(f)
+	m, err := filemap.NewReader(f)
 	if err != nil {
-		t.Fatalf("Mapall: %v\n", err)
+		t.Fatalf("NewReader: %v\n", err)
 	}
 	defer m.Close()
 

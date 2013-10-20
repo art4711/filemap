@@ -2,7 +2,6 @@ package filemap
 
 import (
 	"os"
-	"syscall"
 	"unsafe"
 	"errors"
 )
@@ -12,12 +11,12 @@ type Map struct {
 	size uintptr
 }
 
-func New(file *os.File) (*Map, error) {
+func NewReader(file *os.File) (*Map, error) {
 	s, err := file.Stat()
 	if err != nil {
 		return nil, err
 	}
-	return mmap(uintptr(s.Size()), syscall.PROT_READ, syscall.MAP_SHARED, int(file.Fd()), 0)
+	return mmap(uintptr(s.Size()), PROT_READ, MAP_SHARED, int(file.Fd()), 0)
 }
 
 func (m *Map)Close() {
