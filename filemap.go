@@ -5,6 +5,7 @@ import (
 	"unsafe"
 	"errors"
 	"reflect"
+	"bytes"
 )
 
 type Map struct {
@@ -47,4 +48,34 @@ func (m Map) Slice(elem_len uintptr, off, sz uint64) (unsafe.Pointer, error) {
 	sl.Len = int(sz)
 	sl.Cap = sl.Len
 	return unsafe.Pointer(&sl), nil
+}
+
+func (m Map) Bytes(off, sz uint64) ([]byte, error) {
+	if sz > uint64(maxint) {
+		return nil, errors.New("size overflow")
+	}
+	b, err := m.Slice(1, off, sz)
+	if err != nil {
+		return nil, err
+	}
+	return *(*[]byte)(b), nil
+}
+
+const string_limit = 64*1024*1024
+
+// CString finds a 
+func (m Map) CString(off uint64) ([]byte, error) {
+	l := uint64(m.size) - off
+	if l > string_limit {
+		l = string_limit
+	}
+	s, err := m.Bytes(off, l)
+	if err != nil {
+		return nil, err
+	}
+	e := bytes.IndexByte(s, 0)
+	if e == -1 {
+		return nil, errors.New("string overflow")
+	}
+	return s[:e], nil
 }
