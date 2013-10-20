@@ -4,6 +4,7 @@ import (
 	"os"
 	"unsafe"
 	"errors"
+	"reflect"
 )
 
 type Map struct {
@@ -40,10 +41,10 @@ func (m Map) Slice(elem_len uintptr, off, sz uint64) (unsafe.Pointer, error) {
 	if nptr + (sz * uint64(elem_len)) > uint64(maxuintptr) {
 		return nil, errors.New("mapping overflow")
 	}
-	var sl = struct {
-		addr uintptr
-		len  int
-		cap  int
-        }{uintptr(nptr), int(sz), int(sz)}
+
+	var sl reflect.SliceHeader
+	sl.Data = uintptr(nptr)
+	sl.Len = int(sz)
+	sl.Cap = sl.Len
 	return unsafe.Pointer(&sl), nil
 }
