@@ -1,6 +1,10 @@
 package filemap
 
 /*
+#ifdef __linux__
+// I know Go is type safe, or even type pedantic, but ...
+#define __off_t off_t
+#endif
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <stdlib.h>
